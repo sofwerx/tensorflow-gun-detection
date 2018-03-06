@@ -16,8 +16,14 @@ parser.add_argument("-width", "--width", required=True,
     help="required width to resize")
 args = vars(parser.parse_args())
 
-required_height = int(args["height"])
-required_width = int(args["width"])
+def get_value(dim):
+    if args.get(dim) is not None:
+        return int(args.get(dim))
+    else:
+        return None
+
+required_height = get_value("height")
+required_width = get_value("height")
 input_path = args["input_dir"]
 output_path = args["output_dir"]
 
