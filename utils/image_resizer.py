@@ -21,6 +21,8 @@ required_width = int(args["width"])
 input_path = args["input_dir"]
 output_path = args["output_dir"]
 
+print(output_path)
+
 # create output folder if it doesnot exist
 if not os.path.exists(output_path):
     os.makedirs(output_path)
