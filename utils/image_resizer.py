@@ -18,7 +18,12 @@ args = vars(parser.parse_args())
 
 def get_value(dim):
     if args.get(dim) is not None:
-        return int(args.get(dim))
+        try:
+            return int(args.get(dim))
+        except TypeError:
+            return None
+        except ValueError:
+            return None
     else:
         return None
 
@@ -26,6 +31,11 @@ required_height = get_value("height")
 required_width = get_value("height")
 input_path = args["input_dir"]
 output_path = args["output_dir"]
+
+if required_height is None or required_width is None:
+    print("Please pass height and weight")
+    sys.exit()
+
 
 print(output_path)
 
@@ -73,8 +83,6 @@ for (dirpath, dirnames, image_names) in os.walk(input_path):
             height, width, channels = image.shape
             if height > required_height or width > required_width:
                 image = resize_image(image, required_width, required_height)
-            else:
-                image = resize_image(image)
             # Write the image to output directory
             img_out_path = os.path.join(output_path, img_path)
 
