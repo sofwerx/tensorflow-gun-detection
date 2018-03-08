@@ -14,13 +14,13 @@ def diffImg(t0, t1, t2):
 
 
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 
 
 
 winName = "Movement Indicator"
 
-cv2.namedWindow(winName, cv2.CV_WINDOW_AUTOSIZE)
+cv2.namedWindow(winName, cv2.WINDOW_AUTOSIZE)
 
 
 
