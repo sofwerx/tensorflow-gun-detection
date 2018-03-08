@@ -1,0 +1,36 @@
+<annotation>
+    <folder>train</folder>
+    <filename>00000985.jpg</filename>
+    <size>
+        <width>400</width>
+        <height>439</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+        <name>ak47</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <occluded>0</occluded>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>26</xmin>
+            <ymin>372</ymin>
+            <xmax>273</xmax>
+            <ymax>417</ymax>
+        </bndbox>
+    </object>
+    <object>
+        <name>ak47</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <occluded>0</occluded>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>130</xmin>
+            <ymin>123</ymin>
+            <xmax>180</xmax>
+            <ymax>351</ymax>
+        </bndbox>
+    </object>
+</annotation>
