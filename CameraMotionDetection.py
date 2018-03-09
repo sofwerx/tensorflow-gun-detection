@@ -14,7 +14,7 @@ def diffImg(t0, t1, t2):
 
 
 
-cam = cv2.VideoCapture(1)
+cam = cv2.VideoCapture(0)
 
 
 
@@ -31,11 +31,15 @@ t = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
 
 t_plus = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
 
+fgbg=cv2.createBackgroundSubtractorMOG2()
+
 
 
 while True:
     cv2.imshow(winName, diffImg(t_minus, t, t_plus))
-
+    ret, frame = cam.read()
+    videoMasked = fgbg.apply(frame)
+    cv2.imshow('fgmask' ,videoMasked )
     t_minus = t
 
     t = t_plus
