@@ -9,7 +9,7 @@ def diffImg(t0, t1, t2):              # Function to calculate difference between
   d2 = cv2.absdiff(t1, t0)
   return cv2.bitwise_and(d1, d2)
 
-threshold = 81500                     # Threshold for triggering "motion detection"
+threshold = 100000                     # Threshold for triggering "motion detection"
 cam = cv2.VideoCapture(0)             # Lets initialize capture on webcam
 
 winName = "Movement Indicator"		    # comment to hide window
