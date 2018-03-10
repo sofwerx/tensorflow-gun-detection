@@ -1,0 +1,8 @@
+.DS_Store
+*.pyc
+data/images/raw
+*.jpg
+*.jpeg
+*.png
+*.tiff
+*.tif
