@@ -1,6 +1,8 @@
 .DS_Store
 *.pyc
 data/images/raw
+data/images/processed/train
+data/images/processed/test
 *.jpg
 *.jpeg
 *.png
