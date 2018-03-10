@@ -15,3 +15,7 @@
   - To compress the images which are inside train & test folders inside data/images/processed
     - tar -cvzf train.tar.gz train
     - tar -cvzf test.tar.gz test
+
+  - Rectlabel App in Mac / LabelImg open source:
+    - The bounding boxes around the images were created using Rectlabel tool available for MAC.
+    - We can also use Labelimg open source tool for this task.
