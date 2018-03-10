@@ -8,6 +8,9 @@
   - Create csv records for the xml files
     - Navigate to data/images/processed and run xml_to_csv.py file
 
+  - Create tfrecords
+    - Navigate to data/images/processed and see the generate_tfrecords.py script for instructions.
+
 
 ### utils/image_resizer.py
   - usage
