@@ -5,6 +5,9 @@
     - Images inside data/images/processed are compressed into train.tar.gz and test.tar.gz folders.
     - Navigate to data/images/processed folder and type "bash uncompress.sh" in your terminal.
 
+  - Create csv records for the xml files
+    - Navigate to data/images/processed and run xml_to_csv.py file
+
 
 ### utils/image_resizer.py
   - usage
@@ -19,3 +22,8 @@
   - Rectlabel App in Mac / LabelImg open source:
     - The bounding boxes around the images were created using Rectlabel tool available for MAC.
     - We can also use Labelimg open source tool for this task.
+
+
+### References:
+  - Modified version of xml_to_csv.py from racoon github repo.
+  - generate_tfrecord.py from racoon github repo.
