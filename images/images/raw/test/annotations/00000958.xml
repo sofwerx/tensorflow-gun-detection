@@ -1,0 +1,36 @@
+<annotation>
+    <folder>test</folder>
+    <filename>00000958.jpg</filename>
+    <size>
+        <width>600</width>
+        <height>383</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+        <name>ak47</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <occluded>0</occluded>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>125</xmin>
+            <ymin>140</ymin>
+            <xmax>182</xmax>
+            <ymax>292</ymax>
+        </bndbox>
+    </object>
+    <object>
+        <name>ak47</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <occluded>0</occluded>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>67</xmin>
+            <ymin>63</ymin>
+            <xmax>107</xmax>
+            <ymax>137</ymax>
+        </bndbox>
+    </object>
+</annotation>

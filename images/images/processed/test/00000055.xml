@@ -1,0 +1,23 @@
+<annotation>
+    <folder>test</folder>
+    <filename>00000055.jpg</filename>
+    <size>
+        <width>482</width>
+        <height>200</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+        <name>ak47</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <occluded>0</occluded>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>263</xmin>
+            <ymin>147</ymin>
+            <xmax>318</xmax>
+            <ymax>180</ymax>
+        </bndbox>
+    </object>
+</annotation>

@@ -1,0 +1,10 @@
+<annotation>
+    <folder>train</folder>
+    <filename>00000099.jpg</filename>
+    <size>
+        <width>600</width>
+        <height>427</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+</annotation>

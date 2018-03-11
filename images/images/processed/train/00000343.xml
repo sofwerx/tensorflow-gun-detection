@@ -1,0 +1,23 @@
+<annotation>
+    <folder>train</folder>
+    <filename>00000343.jpg</filename>
+    <size>
+        <width>330</width>
+        <height>164</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+        <name>ak47</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <occluded>0</occluded>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>121</xmin>
+            <ymin>49</ymin>
+            <xmax>265</xmax>
+            <ymax>99</ymax>
+        </bndbox>
+    </object>
+</annotation>
