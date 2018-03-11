@@ -3,6 +3,7 @@
 data/images/raw
 data/images/processed/train
 data/images/processed/test
+data/images
 *.jpg
 *.jpeg
 *.png
