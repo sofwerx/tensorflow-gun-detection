@@ -2,14 +2,21 @@
 
 ### Instructions
   - Uncompress the train & test images
-    - Images inside data/images/processed are compressed into train.tar.gz and test.tar.gz folders.
-    - Navigate to data/images/processed folder and type "bash uncompress.sh" in your terminal.
+    - Images inside images are compressed into train.tar.gz and test.tar.gz folders.
+    - Navigate to images folder and type "bash uncompress.sh" in your terminal.
 
   - Create csv records for the xml files
-    - Navigate to data/images/processed and run xml_to_csv.py file
+    - Navigate to images and run xml_to_csv.py file
 
   - Create tfrecords
-    - Navigate to data/images/processed and see the generate_tfrecords.py script for instructions.
+    - Navigate to images and see the generate_tfrecords.py script for instructions.
+
+  - Once you generate xml files and tfrecords, the files should be available under images/data
+  - Create a folder called training in the root folder.
+  - If you want to do transfer learning pull the model & config files from tensorflow zoo and put the in the root folder.
+  - Move the config file to training/ folder and change the config file to match the paths.
+  - To train the model:
+    - python train.py --logstderr --train_dir=training/ --pipeline_config_path=training/ssd_mobilenet_v1_pets.config
 
 
 ### utils/image_resizer.py
