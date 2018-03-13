@@ -8,3 +8,4 @@ images/test
 *.png
 *.tiff
 *.tif
+ssd_mobilenet_v1_coco_2017_11_17.tar.gz
