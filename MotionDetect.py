@@ -23,7 +23,8 @@ t_plus = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
 timeCheck = datetime.now().strftime('%Ss')
 
 while True:
-  cv2.imshow( winName, cap.read()[1] )		# comment to hide window
+  cv2.imshow( winName, cap.read()[1] )
+  print(cv2.countNonZero(diffImg(t_minus, t, t_plus)))		# comment to hide window
   if cv2.countNonZero(diffImg(t_minus, t, t_plus)) > threshold and timeCheck != datetime.now().strftime('%Ss'):
     dimg= cap.read()[1]
     cv2.imwrite(datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg', dimg)

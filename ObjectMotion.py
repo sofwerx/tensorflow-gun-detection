@@ -16,6 +16,10 @@ import pandas as pd
 import numpy as np
 import time
 
+import sys
+sys.path.append('/home/nvidia/Documents/models') # point to your tensorflow dir
+sys.path.append('/home/nvidia/Documents/models/slim') 
+
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
@@ -26,7 +30,7 @@ import cv2
 # cam = "http://192.168.0.101:8081/video"
 # cap = cv2.VideoCapture(cam)
 
-cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture(1)
 
 # This is needed since the notebook is stored in the object_detection folder.
 sys.path.append("..")
@@ -44,20 +48,16 @@ from utils import visualization_utils as vis_util
 ######################## Motion Detection Variables ######################################
 
 
+def diffImg(t0, t1, t2):              # Function to calculate difference between images.
+  d1 = cv2.absdiff(t2, t1)
+  d2 = cv2.absdiff(t1, t0)
+  return cv2.bitwise_and(d1, d2)
 
-# importing datetime for naming files w/ timestamp
+threshold = 100000                     # Threshold for triggering "motion detection"
+cap = cv2.VideoCapture(1)             # Lets initialize capture on webcam
 
-def diffImg(t0, t1, t2):  # Function to calculate difference between images.
-    d1 = cv2.absdiff(t2, t1)
-    d2 = cv2.absdiff(t1, t0)
-    return cv2.bitwise_and(d1, d2)
-
-
-threshold = 10000  # Threshold for triggering "motion detection"
-# Lets initialize capture on webcam
-
-# winName = "Movement Indicator"		    # comment to hide window
-# cv2.namedWindow(winName)		          # comment to hide window
+#winName = "Movement Indicator"		    # comment to hide window
+#cv2.namedWindow(winName)		          # comment to hide window
 
 # Read three images first:
 t_minus = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
@@ -65,6 +65,7 @@ t = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
 t_plus = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
 # Lets use a time check so we only take 1 pic per sec
 timeCheck = datetime.now().strftime('%Ss')
+
 
 ######################  Initialize Object Dectection Variables ############################
 
@@ -155,86 +156,83 @@ TEST_IMAGE_PATHS = [os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i
 # Size, in inches, of the output images.
 IMAGE_SIZE = (12, 8)
 
+path = '/home/nvidia/Desktop/Motion-Images/'
+
+count = 1
+
 # In[10]:
 
 with detection_graph.as_default():
     with tf.Session(graph=detection_graph) as sess:
         while True:
 
-            start = time.time()
-            stop = time.time()
-            duration = stop - start
+		#cv2.imshow( winName, cap.read()[1] )
+  		#print(cv2.countNonZero(diffImg(t_minus, t, t_plus)))		# comment to hide window
+  		if cv2.countNonZero(diffImg(t_minus, t, t_plus)) > threshold and timeCheck != datetime.now().strftime('%Ss'):
+    			dimg= cap.read()[1]
+    			#cv2.imwrite(path + datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg', dimg)
+			image_np = dimg
+                	# Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+                	image_np_expanded = np.expand_dims(image_np, axis=0)
+                	image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
+                	# Each box represents a part of the image where a particular object was detected.
+                	boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
+                	# Each score represent how level of confidence for each of the objects.
+                	# Score is shown on the result image, together with the class label.
+                	scores = detection_graph.get_tensor_by_name('detection_scores:0')
+                	classes = detection_graph.get_tensor_by_name('detection_classes:0')
+                	num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+                	# Actual detection.
+                	(boxes, scores, classes, num_detections) = sess.run(
+                    	[boxes, scores, classes, num_detections],
+                    	feed_dict={image_tensor: image_np_expanded})
+                	# Visualization of the results of a detection.
+                	vis_util.visualize_boxes_and_labels_on_image_array(
+                    	image_np,
+                    	np.squeeze(boxes),
+                    	np.squeeze(classes).astype(np.int32),
+                    	np.squeeze(scores),
+                    	category_index,
+                    	use_normalized_coordinates=True,
+                    	line_thickness=8)
 
-            if cv2.countNonZero(diffImg(t_minus, t, t_plus)) > threshold and timeCheck != datetime.now().strftime(
-                    '%Ss'):
-                # dimg = cap.read()[1]
-                # cv2.imwrite(datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg', dimg)
+                	df = pd.DataFrame(boxes.reshape(100, 4), columns=['y_min', 'x_min', 'y_max', 'x_max'])
+                	df1 = pd.DataFrame(classes.reshape(100, 1), columns=['classes'])
+                	df2 = pd.DataFrame(scores.reshape(100, 1), columns=['scores'])
+                	df5 = pd.concat([df, df1, df2], axis=1)
+                	df6 = df5.loc[df5['classes'] == 1]
+                	df7 = df6.loc[df6['scores'] > 0.50]
 
+                	if int(len(df7.index)) > 0:
+                    		people = int(len(df7.index))
+                	else:
+                    		people = 0
 
-                ret, image_np = cap.read()
-                # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-                image_np_expanded = np.expand_dims(image_np, axis=0)
-                image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-                # Each box represents a part of the image where a particular object was detected.
-                boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-                # Each score represent how level of confidence for each of the objects.
-                # Score is shown on the result image, together with the class label.
-                scores = detection_graph.get_tensor_by_name('detection_scores:0')
-                classes = detection_graph.get_tensor_by_name('detection_classes:0')
-                num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-                # Actual detection.
-                (boxes, scores, classes, num_detections) = sess.run(
-                    [boxes, scores, classes, num_detections],
-                    feed_dict={image_tensor: image_np_expanded})
-                # Visualization of the results of a detection.
-                vis_util.visualize_boxes_and_labels_on_image_array(
-                    image_np,
-                    np.squeeze(boxes),
-                    np.squeeze(classes).astype(np.int32),
-                    np.squeeze(scores),
-                    category_index,
-                    use_normalized_coordinates=True,
-                    line_thickness=8)
+                	columns = ['TimeNow', 'Class', 'Count']
+                	index = [0]
+                	timenow = datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f')
+                	df_ = pd.DataFrame(index=index, columns=columns)
+                	df_.loc[0, 'TimeNow'] = timenow
+                	df_.loc[0, 'Class'] = 1
+                	df_.loc[0, 'Count'] = people
+                        print("pixelDiff:" + str(cv2.countNonZero(diffImg(t_minus, t, t_plus))))
+                        print(df_)
+                
+            		#cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
+			cv2.imwrite(path + datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg', image_np)
+            		if cv2.waitKey(25) & 0xFF == ord('q'):
+				cv2.destroyAllWindows()
+                	#	break
+                 
+            	else:
+			cv2.destroyAllWindows()
+			
 
-                df = pd.DataFrame(boxes.reshape(100, 4), columns=['y_min', 'x_min', 'y_max', 'x_max'])
-                df1 = pd.DataFrame(classes.reshape(100, 1), columns=['classes'])
-                df2 = pd.DataFrame(scores.reshape(100, 1), columns=['scores'])
-                df5 = pd.concat([df, df1, df2], axis=1)
-                df6 = df5.loc[df5['classes'] == 1]
-                df7 = df6.loc[df6['scores'] > 0.80]
-
-                if int(len(df7.index)) > 0:
-                    people = int(len(df7.index))
-                else:
-                    people = 0
-
-                columns = ['TimeNow', 'Class', 'Count']
-                index = [0]
-                timenow = datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f')
-                df_ = pd.DataFrame(index=index, columns=columns)
-                df_.loc[0, 'TimeNow'] = timenow
-                df_.loc[0, 'Class'] = 1
-                df_.loc[0, 'Count'] = people
-
-            # Motion Variables
-            timeCheck = datetime.now().strftime('%Ss')
-            # Read next image
-            t_minus = t
-            t = t_plus
-            t_plus = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
-
-            stop = time.time()
-            duration = stop - start
-            print(df_)
-            os.system('clear')
-            cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
-            if cv2.waitKey(25) & 0xFF == ord('q'):
-                cv2.destroyAllWindows()
-                break
-
-
-            else:
-
-                continue
+			  
+  		timeCheck = datetime.now().strftime('%Ss')
+  		# Read next image
+  		t_minus = t
+  		t = t_plus
+  		t_plus = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
 
 

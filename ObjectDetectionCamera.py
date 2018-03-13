@@ -15,6 +15,7 @@ from PIL import Image
 import numpy as np
 import time
 
+
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
