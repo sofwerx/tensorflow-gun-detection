@@ -11,7 +11,7 @@ from io import StringIO
 from matplotlib import pyplot as plt
 from PIL import Image
 # import ujson as json
-import pandas as pd
+#import pandas as pd
 import numpy as np
 import time
 
@@ -126,7 +126,7 @@ IMAGE_SIZE = (12, 8)
 with detection_graph.as_default():
     with tf.Session(graph=detection_graph) as sess:
         while True:
-            start = time.time()
+           # start = time.time()
 
             stop = time.time()
             duration = stop - start
@@ -155,15 +155,15 @@ with detection_graph.as_default():
                 use_normalized_coordinates=True,
                 line_thickness=8)
             # Convert tensorflow data to pandas data frams
-            df = pd.DataFrame(boxes.reshape(100, 4), columns=['y_min', 'x_min', 'y_max', 'x_max'])
-            df1 = pd.DataFrame(classes.reshape(100, 1), columns=['classes'])
-            df2 = pd.DataFrame(scores.reshape(100, 1), columns=['scores'])
-            df5 = pd.concat([df, df1, df2], axis=1)
-            df6 = df5.loc[df5['classes'] == 1]
-            print(len(df6.index))
+            #df = pd.DataFrame(boxes.reshape(100, 4), columns=['y_min', 'x_min', 'y_max', 'x_max'])
+            #df1 = pd.DataFrame(classes.reshape(100, 1), columns=['classes'])
+            #df2 = pd.DataFrame(scores.reshape(100, 1), columns=['scores'])
+            #df5 = pd.concat([df, df1, df2], axis=1)
+           # df6 = df5.loc[df5['classes'] == 1]
+          #  print(len(df6.index))
 
-            stop = time.time()
-            duration = stop - start
+            #stop = time.time()
+            #duration = stop - start
             print(duration)
             cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
             if cv2.waitKey(25) & 0xFF == ord('q'):

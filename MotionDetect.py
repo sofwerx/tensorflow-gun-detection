@@ -2,15 +2,15 @@ import cv2                            # importing Python OpenCV
 from datetime import datetime
 import os
 
-os.chdir('/home/david/Desktop/motion-images')# importing datetime for naming files w/ timestamp
+os.chdir('/home/nvidia/Desktop/Motion-Images')# importing datetime for naming files w/ timestamp
 
 def diffImg(t0, t1, t2):              # Function to calculate difference between images.
   d1 = cv2.absdiff(t2, t1)
   d2 = cv2.absdiff(t1, t0)
   return cv2.bitwise_and(d1, d2)
 
-threshold = 100000                     # Threshold for triggering "motion detection"
-cap = cv2.VideoCapture(0)             # Lets initialize capture on webcam
+threshold = 150000                     # Threshold for triggering "motion detection"
+cap = cv2.VideoCapture(1)             # Lets initialize capture on webcam
 
 winName = "Movement Indicator"		    # comment to hide window
 cv2.namedWindow(winName)		          # comment to hide window
