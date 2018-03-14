@@ -56,13 +56,13 @@ def diffImg(t0, t1, t2):  # Function to calculate difference between images.
     d2 = cv2.absdiff(t1, t0)
     return cv2.bitwise_and(d1, d2)
 
-url ='http://192.168.0.164:6884/videostream.cgi?user=admin&pwd=888888'
+url ='http://192.168.0.164:34236/videostream.cgi?user=admin&pwd=888888'
 
 threshold = 100000  # Threshold for triggering "motion detection"
 cap = cv2.VideoCapture(url)  # Lets initialize capture on webcam
 
-winName = "Movement Indicator"		    # comment to hide window
-cv2.namedWindow(winName)		          # comment to hide window
+#winName = "Movement Indicator"		    # comment to hide window
+#cv2.namedWindow(winName)		          # comment to hide window
 
 # Read three images first:
 t_minus = cv2.cvtColor(cap.read()[1], cv2.COLOR_RGB2GRAY)
@@ -170,7 +170,7 @@ with detection_graph.as_default():
     with tf.Session(graph=detection_graph) as sess:
         while True:
 
-            cv2.imshow( winName, cap.read()[1] )
+            #cv2.imshow( winName, cap.read()[1] )
             # print(cv2.countNonZero(diffImg(t_minus, t, t_plus)))		# comment to hide window
             if cv2.countNonZero(diffImg(t_minus, t, t_plus)) > threshold and timeCheck != datetime.now().strftime(
                     '%Ss'):
@@ -227,6 +227,7 @@ with detection_graph.as_default():
                 jn = df_.to_json(orient='records', lines=True)
 
                 jn1 = json.loads(jn)
+                print(jn)
 
                 url = 'https://elasticsearch.redrange1.devwerx.org:51443/persondetect/_doc'
                 username = 'elastic'
@@ -237,7 +238,7 @@ with detection_graph.as_default():
 
                 
                 print("pixelDiff:" + str(cv2.countNonZero(diffImg(t_minus, t, t_plus))))
-                print( df_)
+
 
                 # cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
                 #cv2.imwrite(path + datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg', image_np)

@@ -10,7 +10,7 @@ from datetime import datetime
 
 columns = ['TimeNow', 'Class', 'Count']
 index = [0]
-timenow = datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f')
+timenow = timenow = datetime.utcnow()
 df_ = pd.DataFrame(index=index, columns=columns)
 df_.loc[0, 'TimeNow'] = timenow
 df_.loc[0, 'Class'] = 1
@@ -24,10 +24,10 @@ jn1 = json.loads(jn)
 
 print(jn)
 
-url = 'https://elasticsearch.redrange1.devwerx.org:51443/persondetect/_doc'
-username = 'elastic'
-password = 'ohnohch2aZ'
-headers = {'Content-Type': 'application/json', 'X-HTTP-Method-Overide': 'PUT', 'Accept-Charset': 'UTF-8'}
-r = requests.post(url, data=json.dumps(jn1), headers=headers, auth=HTTPBasicAuth(username, password))
+# url = 'https://elasticsearch.redrange1.devwerx.org:51443/persondetect/_doc'
+# username = 'elastic'
+# password = 'ohnohch2aZ'
+# headers = {'Content-Type': 'application/json', 'X-HTTP-Method-Overide': 'PUT', 'Accept-Charset': 'UTF-8'}
+# r = requests.post(url, data=json.dumps(jn1), headers=headers, auth=HTTPBasicAuth(username, password))
 
 
