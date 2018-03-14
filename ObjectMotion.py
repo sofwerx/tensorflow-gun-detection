@@ -213,13 +213,13 @@ with detection_graph.as_default():
                 else:
                     people = 0
 
-                columns = ['LocationID','DeviceID','TimeNow','DeviceTime', 'Class', 'Count']
+                columns = ['LocationID','DeviceID','DeviceTime', 'Class', 'Count']
                 index = [0]
                 timenow = datetime.utcnow()
                 df_ = pd.DataFrame(index=index, columns=columns)
                 df_.loc[0, 'LocationID'] = '1'
                 df_.loc[0, 'DeviceID'] = '1'
-                df_.loc[0, 'TimeNow'] = timenow
+                df_.loc[0, 'DeviceTime'] = timenow
                 df_.loc[0, 'Class'] = 1
                 df_.loc[0, 'Count'] = people
 
@@ -229,13 +229,11 @@ with detection_graph.as_default():
                 jn1 = json.loads(jn)
                 print(jn)
 
-                url = 'https://elasticsearch.redrange1.devwerx.org:51443/persondetect/_doc'
+                url = 'https://elasticsearch.blueteam.devwerx.org:443/persondetect/_doc'
                 username = 'elastic'
-                password = 'ohnohch2aZ'
+                password = 'taiko7Ei'
                 headers = {'Content-Type': 'application/json', 'X-HTTP-Method-Overide': 'PUT', 'Accept-Charset': 'UTF-8'}
                 r = requests.post(url, data=json.dumps(jn1), headers=headers, auth=HTTPBasicAuth(username, password))
-                jn = df_.to_json(orient='records', lines=True)
-
                 
                 print("pixelDiff:" + str(cv2.countNonZero(diffImg(t_minus, t, t_plus))))
 
