@@ -1,5 +1,11 @@
 # tensorflow-gun-detection
 
+### Scores
+| Model          | Mobile SSD | Faster RCNN |
+|----------------|------------|-------------|
+| Test Loss      | 1.5        | 0.1016      |
+| Trained Rounds | 5114       | 7167        |  
+
 ### Instructions
   - Uncompress the train & test images
     - Images inside images are compressed into train.tar.gz and test.tar.gz folders.
