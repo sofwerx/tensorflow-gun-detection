@@ -174,6 +174,7 @@ with detection_graph.as_default():
             ret,image = cap.read()
             ret2,image2 = cap.read()
             
+            
             if image is not None and image2 is not None and ret is True and ret2 is True:
             
                 cv2.imshow('frame', image)
@@ -255,5 +256,11 @@ with detection_graph.as_default():
                 t_minus = t
                 t = t_plus
                 t_plus = cv2.cvtColor(image2, cv2.COLOR_RGB2GRAY)
+            
+            if ret is False:
+                cap.release()
+                cv2.destroyAllWindows()
+                cap = cv2.VideoCapture(0)
+                
 
 
