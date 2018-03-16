@@ -41,6 +41,7 @@ while(cam.isOpened()):
     ret, frame = cam.read()
     if frame is not None and ret is True:
         cv2.imshow(winName, diffImg(t_minus, t, t_plus))
+        print("pixelDiff:" + str(cv2.countNonZero(diffImg(t_minus, t, t_plus))))
         #ret, frame = cv2.imread('/home/david/Desktop/motion-images/img.jpg')
         videoMasked = fgbg.apply(frame)
         cv2.imshow('fgmask' ,videoMasked )
