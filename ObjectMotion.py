@@ -56,7 +56,7 @@ def diffImg(t0, t1, t2):  # Function to calculate difference between images.
     d2 = cv2.absdiff(t1, t0)
     return cv2.bitwise_and(d1, d2)
 
-url ='http://192.168.0.164:34236/videostream.cgi?user=admin&pwd=888888'
+url ='rtsp://admin:888888@192.168.0.164:10554/tcp/av0_0'
 
 threshold = 100000  # Threshold for triggering "motion detection"
 cap = cv2.VideoCapture(url)  # Lets initialize capture on webcam
