@@ -4,6 +4,7 @@ images/images
 images/train
 images/test
 images/validation
+training
 *.jpg
 *.jpeg
 *.png
