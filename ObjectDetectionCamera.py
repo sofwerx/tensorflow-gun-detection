@@ -1,3 +1,6 @@
+
+
+
 import numpy as np
 import os
 import six.moves.urllib as urllib
@@ -5,28 +8,28 @@ import sys
 import tarfile
 import tensorflow as tf
 import zipfile
+from datetime import datetime
+import json
+import requests
+import os
+from requests.auth import HTTPBasicAuth
 
 from collections import defaultdict
 from io import StringIO
 from matplotlib import pyplot as plt
 from PIL import Image
 # import ujson as json
-#import pandas as pd
+import pandas as pd
 import numpy as np
 import time
-
-
-config = tf.ConfigProto()
-config.gpu_options.allow_growth = True
-session = tf.Session(config=config)
-
+import sys
 import cv2
 
 # cam = 0 # Use  local webcam.
-# cam = "http://192.168.0.101:8081/video"
+url = 'rtsp://admin:888888@192.168.0.164:10554/tcp/av0_0'
 # cap = cv2.VideoCapture(cam)
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(url)
 
 # This is needed since the notebook is stored in the object_detection folder.
 sys.path.append("..")
@@ -126,50 +129,91 @@ IMAGE_SIZE = (12, 8)
 
 with detection_graph.as_default():
     with tf.Session(graph=detection_graph) as sess:
-        while True:
-           # start = time.time()
+        while(cap.isOpened()):
+            
+            # Read first and next image
+            ret,image = cap.read()
 
-            stop = time.time()
-            duration = stop - start
-            ret, image_np = cap.read()
-            # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-            image_np_expanded = np.expand_dims(image_np, axis=0)
-            image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-            # Each box represents a part of the image where a particular object was detected.
-            boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-            # Each score represent how level of confidence for each of the objects.
-            # Score is shown on the result image, together with the class label.
-            scores = detection_graph.get_tensor_by_name('detection_scores:0')
-            classes = detection_graph.get_tensor_by_name('detection_classes:0')
-            num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-            # Actual detection.
-            (boxes, scores, classes, num_detections) = sess.run(
-                [boxes, scores, classes, num_detections],
-                feed_dict={image_tensor: image_np_expanded})
-            # Visualization of the results of a detection.
-            vis_util.visualize_boxes_and_labels_on_image_array(
-                image_np,
-                np.squeeze(boxes),
-                np.squeeze(classes).astype(np.int32),
-                np.squeeze(scores),
-                category_index,
-                use_normalized_coordinates=True,
-                line_thickness=8)
-            # Convert tensorflow data to pandas data frams
-            #df = pd.DataFrame(boxes.reshape(100, 4), columns=['y_min', 'x_min', 'y_max', 'x_max'])
-            #df1 = pd.DataFrame(classes.reshape(100, 1), columns=['classes'])
-            #df2 = pd.DataFrame(scores.reshape(100, 1), columns=['scores'])
-            #df5 = pd.concat([df, df1, df2], axis=1)
-           # df6 = df5.loc[df5['classes'] == 1]
-          #  print(len(df6.index))
+            
+            
+            if image is not None and ret is True:
+            
 
-            #stop = time.time()
-            #duration = stop - start
-            print(duration)
-            cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
-            if cv2.waitKey(25) & 0xFF == ord('q'):
+
+                dimg = image
+                # cv2.imwrite(path + datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg', dimg)
+                image_np = dimg
+                # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+                image_np_expanded = np.expand_dims(image_np, axis=0)
+                image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
+                # Each box represents a part of the image where a particular object was detected.
+                boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
+                # Each score represent how level of confidence for each of the objects.
+                # Score is shown on the result image, together with the class label.
+                scores = detection_graph.get_tensor_by_name('detection_scores:0')
+                classes = detection_graph.get_tensor_by_name('detection_classes:0')
+                num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+                # Actual detection.
+                (boxes, scores, classes, num_detections) = sess.run(
+                    [boxes, scores, classes, num_detections],
+                    feed_dict={image_tensor: image_np_expanded})
+                # Visualization of the results of a detection.
+                vis_util.visualize_boxes_and_labels_on_image_array(
+                    image_np,
+                    np.squeeze(boxes),
+                    np.squeeze(classes).astype(np.int32),
+                    np.squeeze(scores),
+                    category_index,
+                    use_normalized_coordinates=True,
+                    line_thickness=8)
+
+                df = pd.DataFrame(boxes.reshape(100, 4), columns=['y_min', 'x_min', 'y_max', 'x_max'])
+                df1 = pd.DataFrame(classes.reshape(100, 1), columns=['classes'])
+                df2 = pd.DataFrame(scores.reshape(100, 1), columns=['scores'])
+                df5 = pd.concat([df, df1, df2], axis=1)
+                df6 = df5.loc[df5['classes'] == 1]
+                df7 = df6.loc[df6['scores'] > 0.50]
+
+                if int(len(df7.index)) > 0:
+                    people = int(len(df7.index))
+                else:
+                    people = 0
+
+                columns = ['LocationID','DeviceID','DeviceTime', 'Class', 'Count']
+                index = [0]
+                timenow = datetime.utcnow()
+                df_ = pd.DataFrame(index=index, columns=columns)
+                df_.loc[0, 'LocationID'] = '1'
+                df_.loc[0, 'DeviceID'] = '1'
+                df_.loc[0, 'DeviceTime'] = timenow
+                df_.loc[0, 'Class'] = 1
+                df_.loc[0, 'Count'] = people
+
+
+                jn = df_.to_json(orient='records', lines=True)
+
+                jn1 = json.loads(jn)
+                print(jn)
+                
+                if people > 0:
+
+                   url = 'https://elasticsearch.blueteam.devwerx.org:443/persondetect/_doc'
+                   username = 'elastic'
+                   password = 'taiko7Ei'
+                   headers = {'Content-Type': 'application/json', 'X-HTTP-Method-Overide': 'PUT', 'Accept-Charset': 'UTF-8'}
+                   r = requests.post(url, data=json.dumps(jn1), headers=headers, auth=HTTPBasicAuth(username, password))
+
+
+                cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
+                #cv2.imwrite(path + datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg', image_np)
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    cv2.destroyAllWindows()
+                    #	break
+
+
+            
+            if ret is False:
+                cap.release()
                 cv2.destroyAllWindows()
-                break
-
-
-
+                cap = cv2.VideoCapture(url)
+                
