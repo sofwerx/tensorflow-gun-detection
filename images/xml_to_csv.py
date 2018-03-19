@@ -27,14 +27,15 @@ def xml_to_csv(path):
 
 
 def main():
-    for directory in ["train", "test"]:
-    	image_path = os.path.join(os.getcwd(), directory)
-   	xml_df = xml_to_csv(image_path)
+    for directory in ["train", "test", "validation"]:
+        image_path = os.path.join(os.getcwd(), directory)
+        xml_df = xml_to_csv(image_path)
         output_dir = os.path.join(os.getcwd(), "data")
-	if not os.path.exists(output_dir):
-	    os.makedirs(output_dir)
-    	xml_df.to_csv("data/{}_labels.csv".format(directory), index=None)
-    	print('Successfully converted xml to csv.')
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        xml_df.to_csv("data/{}_labels.csv".format(directory), index=None)
+        print('Successfully converted xml to csv for, ' directory)
 
 
 main()
