@@ -16,15 +16,13 @@ MODEL_PATHS = ['./outputs/ssd_mobile/ssd_mobile/ssd_mobile_graph_output', \
     './outputs/faster_rcnn/faster_rcnn_inception_v2_graph_output']
 
 MODEL_TRAINING_PATHS = ['./outputs/ssd_mobile/ssd_mobile/training', \
-    '/outputs/faster_rcnn/training'
+    './outputs/faster_rcnn/training'
     ]
 
 for model_path, model_tr_path in zip(MODEL_PATHS, MODEL_TRAINING_PATHS):
     MODEL_NAME = model_path
     PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
     PATH_TO_LABELS = os.path.join(model_tr_path, 'object-detection.pbtxt')
-
-    print(model_tr_path.split("/")[2])
 
     output_path = "./outputs/" + model_tr_path.split("/")[2] + "_bounding_boxes_count.csv"
 
