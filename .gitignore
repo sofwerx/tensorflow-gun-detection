@@ -4,6 +4,8 @@ images/images
 images/train
 images/test
 images/validation
+outputs/faster_rcnn
+outputs/ssd_mobile
 training
 *.jpg
 *.jpeg
