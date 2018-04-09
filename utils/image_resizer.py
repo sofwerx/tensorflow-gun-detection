@@ -28,7 +28,7 @@ def get_value(dim):
         return None
 
 required_height = get_value("height")
-required_width = get_value("height")
+required_width = get_value("width")
 input_path = args["input_dir"]
 output_path = args["output_dir"]
 
